@@ -1,6 +1,6 @@
-const CACHE = "two-daily-20261028c";
+const CACHE = "two-daily-20261028d";
 const BASE = new URL("./", self.location);
-const FILES = ["", "index.html", "site.css?v=3", "plan.js?v=3", "app.js?v=3", "manifest.webmanifest"].map((name) => new URL(name, BASE).toString());
+const FILES = ["", "index.html", "site.css?v=4", "plan.js?v=3", "app.js?v=3", "manifest.webmanifest"].map((name) => new URL(name, BASE).toString());
 
 self.addEventListener("install", (event) => {
   event.waitUntil(caches.open(CACHE).then((cache) => cache.addAll(FILES)).then(() => self.skipWaiting()));

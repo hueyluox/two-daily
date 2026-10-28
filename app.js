@@ -239,8 +239,8 @@
     const move = day.move[person()];
     const spoken = splitFirst(move.text);
     const kids = [big ? el("h2", {}, [spoken.title]) : el("p", { class: "line" }, [spoken.title])];
-    if (spoken.rest) kids.push(el("p", { class: "note" }, [spoken.rest]));
-    if (move.detail) kids.push(el("p", { class: "note" }, [move.detail]));
+    if (big && spoken.rest) kids.push(el("p", { class: "note" }, [spoken.rest]));
+    if (big && move.detail) kids.push(el("p", { class: "note" }, [move.detail]));
     if (day.date <= todayISO()) kids.push(moveButtons(day, big));
     return el("section", { class: big ? "lead" : "row" }, kids);
   }
