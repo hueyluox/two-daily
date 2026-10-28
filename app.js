@@ -203,7 +203,10 @@
     if (big) kids.push(el("h2", {}, [spoken.title]));
     else {
       const later = day.date === todayISO() && !canMarkMeal(name, day.date);
-      kids.push(el("p", { class: "line" }, [spoken.title + (later ? "还没到这顿。" : "")]));
+      kids.push(el("p", { class: "line" }, [
+        spoken.title,
+        later ? el("span", { class: "later" }, ["还没到这顿"]) : null,
+      ]));
     }
     if (spoken.rest) kids.push(el("p", { class: "note" }, [spoken.rest]));
     if (name === "dinner" && day.dinnerNote) kids.push(el("p", { class: "note" }, [day.dinnerNote]));
@@ -291,21 +294,22 @@
     else if (lead.type === "move") blocks.push(moveBlock(day, true));
     else blocks.push(settleBlock(day));
 
+    const rest = [];
     MEALS.forEach((name) => {
-      if (name !== leadMeal) blocks.push(mealBlock(day, name, false));
+      if (name !== leadMeal) rest.push(mealBlock(day, name, false));
     });
-    if (lead.type !== "move") blocks.push(moveBlock(day, false));
-    if (lead.type !== "settle") blocks.push(sleepBlock(day, false));
+    if (lead.type !== "move") rest.push(moveBlock(day, false));
+    if (lead.type !== "settle") rest.push(sleepBlock(day, false));
 
     if (day.tonight && day.tonight.length) {
-      blocks.push(el("section", { class: "row" }, [
+      rest.push(el("section", { class: "row" }, [
         el("p", { class: "line" }, ["睡前顺手：" + day.tonight.join("")]),
       ]));
     }
     const index = PLAN.days.findIndex((item) => item.date === day.date);
     const next = PLAN.days[index + 1];
     if (next) {
-      blocks.push(el("section", { class: "row" }, [
+      rest.push(el("section", { class: "row" }, [
         el("a", { class: "daylink", href: "#today/" + next.date }, [
           "明天早餐",
           el("span", {}, [next.breakfast[person()].short]),
@@ -313,13 +317,13 @@
       ]));
     }
     if (day.date === PLAN.start) {
-      blocks.push(el("details", { id: "earlier", class: "row" }, [
+      rest.push(el("details", { id: "earlier", class: "row" }, [
         el("summary", {}, ["前两天已经说过的"]),
         el("ul", { class: "shop" }, PLAN.earlier.map((line) => el("li", {}, [line]))),
       ]));
     }
     if (!state.hideNote && day.date === todayISO()) {
-      blocks.push(el("section", { class: "row" }, [
+      rest.push(el("section", { class: "row" }, [
         el("p", {}, ["她用自己的手机打开同一个网址，点「她」。勾选记在各自手机里，不会自动跑到对方手机上。"]),
         el("button", {
           type: "button",
@@ -328,6 +332,7 @@
         }, ["知道了"]),
       ]));
     }
+    blocks.push(el("div", { class: "stack" }, rest));
     blocks.push(el("p", { class: "hint" }, ["没点过不算没做。点错了再点一次就撤销。漏一天，从今天继续。"]));
     return blocks;
   }
@@ -343,16 +348,18 @@
   function renderMove(day) {
     const move = day.move[person()];
     const spoken = splitFirst(move.text);
-    const blocks = [el("h2", { class: "page-title" }, [spoken.title])];
+    const blocks = [];
     if (day.date !== todayISO()) {
       blocks.push(el("div", { class: "banner" }, [
         el("p", {}, [day.date > todayISO() ? "这是后面某一天的动作。" : "这是前面某一天的动作。"]),
         el("button", { type: "button", class: "texty", onclick: () => { location.hash = "#move"; } }, ["看今天"]),
       ]));
     }
-    if (spoken.rest) blocks.push(el("p", { class: "note" }, [spoken.rest]));
-    if (move.detail) blocks.push(el("p", { class: "note" }, [move.detail]));
-    if (day.date <= todayISO()) blocks.push(moveButtons(day, true));
+    const leadKids = [el("h2", {}, [spoken.title])];
+    if (spoken.rest) leadKids.push(el("p", { class: "note" }, [spoken.rest]));
+    if (move.detail) leadKids.push(el("p", { class: "note" }, [move.detail]));
+    if (day.date <= todayISO()) leadKids.push(moveButtons(day, true));
+    blocks.push(el("section", { class: "lead" }, leadKids));
     const list = exerciseList(move);
     if (list) blocks.push(list);
     if (move.note) blocks.push(el("p", { class: "note" }, [move.note]));
@@ -379,10 +386,10 @@
       el("p", {}, [PLAN.eatOut]),
       el("h2", {}, ["这几天先买"]),
       el("p", { class: "note" }, [week.label + "。先看家里有的，再补缺的。"]),
-      el("ul", { class: "shop" }, week.items.map((item) => el("li", {}, [item]))),
+      el("ul", { class: "shop stack" }, week.items.map((item) => el("li", {}, [item]))),
       el("h2", {}, ["每天"]),
     ];
-    const list = el("div", {}, []);
+    const list = el("div", { class: "stack days" }, []);
     PLAN.days.forEach((day) => {
       const who = person();
       const brief = "早 " + day.breakfast[who].short + "  ·  午 " + day.lunch[who].short + "  ·  晚 " + day.dinner[who].short;
