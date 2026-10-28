@@ -1,0 +1,9 @@
+{
+  "name": "今天吃什么",
+  "short_name": "今天",
+  "start_url": "./",
+  "display": "standalone",
+  "background_color": "#d5e0e4",
+  "theme_color": "#f4f8f8",
+  "lang": "zh-Hans"
+}

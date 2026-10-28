@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="zh-Hans">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="robots" content="noindex, nofollow">
+  <meta name="theme-color" content="#f4f8f8">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-title" content="今天">
+  <meta name="apple-mobile-web-app-status-bar-style" content="default">
+  <title>今天</title>
+  <link rel="manifest" href="manifest.webmanifest">
+  <link rel="stylesheet" href="site.css">
+</head>
+<body>
+  <!--
+  THESIS: The page is the next thing to do, in spoken orders. It refuses scores, rings, and a grid of equal cards.
+  OWN-WORLD: Cool kitchen light, one whiteboard sheet, ink rules, marker-green confirmation.
+  STORY: Open the phone, see the meal, the walk, and lights-out, then tap once. 我 and 她 switch plans. Missed days stay unmarked.
+  FIRST VIEWPORT: Date and person on one line. The current meal is the largest type, with two buttons under it. Move and sleep follow as ruled rows. Word nav sits in the thumb zone.
+  FORM: Kitchen whiteboard list for one-handed phone use. No concept-seed roll; the daily job was already specified.
+  FINISH: unreviewed and undocumented is unfinished; this build ends with the finish review, the verdict, DESIGN.md, and every shipping raster carrying its provenance
+  -->
+  <div class="sheet">
+    <header id="top"></header>
+    <main id="main"></main>
+  </div>
+  <nav>
+    <div class="nav-inner">
+      <button type="button" data-go="today">今天</button>
+      <button type="button" data-go="menu">菜单</button>
+      <button type="button" data-go="move">动作</button>
+      <button type="button" data-go="week">这周</button>
+    </div>
+  </nav>
+  <script src="plan.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>
